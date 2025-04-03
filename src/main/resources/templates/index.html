@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="theme.css" rel="stylesheet"></head>
+<body>
+
+    <div class="wrapper">
+        <header>
+            <span class="title">Recipe Generator</span>
+            <span class="subtitle">powered by <span th:utext="${aiModel}" /></span>
+        </header>
+        <div class="content-wrapper">
+            <form action="#" th:action="@{/}" method="post">
+                <input type="text" id="instructions" name="instructions" />
+                <label for="instructions">instructions:</label>
+                <button type="submit">Generate</button>
+            </form>
+            <div class="content" th:if="${recipe != null}">
+                <div class="text">
+                    <h2 th:text="${recipe.title}">Recipe Title</h2>
+                    <p th:text="${recipe.description}">Recipe Description</p>
+                    <h4>Ingredients</h4>
+                    <ul>
+                        <li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient}">Ingredient</li>
+                    </ul>
+                    <h4>Steps</h4>
+                    <ul id="steps">
+                        <li th:each="step : ${recipe.steps}" th:text="${step}">Step</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
