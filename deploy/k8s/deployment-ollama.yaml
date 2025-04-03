@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ollama
+  name: ollama
+spec:
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      volumes:
+      - name: ollama
+        hostPath:
+          path: /opt/ollama
+          type: DirectoryOrCreate
+      containers:
+      - image: ollama/ollama
+        name: ollama
+        env:
+        - name: MODEL
+          valueFrom:
+            configMapKeyRef:
+              name: ollama
+              key: model
+        volumeMounts:
+        - name: ollama
+          mountPath: /root/.ollama
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - ollama pull $MODEL
+        livenessProbe:
+          httpGet:
+            port: 11434
+        readinessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - ollama show $MODEL
+        ports:
+        - name: ollama
+          containerPort: 11434
+        # These are commented out for learning purposes
+        # (so that using this Deployment manifest as-is
+        # results in resource contention).
+        #resources:
+        #  requests:
+        #    cpu: 1
+        #  limits: 
+        #    cpu: 2
