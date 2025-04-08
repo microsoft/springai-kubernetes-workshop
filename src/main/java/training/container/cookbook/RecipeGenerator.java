@@ -1,8 +1,6 @@
 package training.container.cookbook;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
-import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

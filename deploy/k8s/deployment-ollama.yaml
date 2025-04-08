@@ -36,7 +36,10 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - ollama pull $MODEL
+                - |
+                  set -e
+                  ollama pull $MODEL
+                  ollama pull mxbai-embed-large
         livenessProbe:
           httpGet:
             port: 11434
@@ -45,13 +48,16 @@ spec:
             command:
               - /bin/sh
               - -c
-              - ollama show $MODEL
+              - |
+                set -e
+                ollama show $MODEL
+                ollama show mxbai-embed-large
         ports:
         - name: ollama
           containerPort: 11434
         # These are commented out for learning purposes
         # (so that using this Deployment manifest as-is
-        # results in resource contention).
+        # results in resource contention when scaling).
         #resources:
         #  requests:
         #    cpu: 1

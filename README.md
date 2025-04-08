@@ -16,10 +16,13 @@ This demo is created for the 42Berlin and Devoxx France workshops.
 - Java 21 Runtime Environment
 - Maven 3 for building the project
 - Docker (optional, for containerized deployment)
+- Ollama (make sure to pull the models that you want to use, as the app won't pull them automatically)
+- Redis Stack (for the RAG part)
 
 ## Build and Run
 
 ### Using Maven
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-repo/cookbook.git
@@ -35,6 +38,7 @@ This demo is created for the 42Berlin and Devoxx France workshops.
    ```
 
 ### Using Docker
+
 1. Build the Docker image:
    ```bash
    docker build -t cookbook .
@@ -43,6 +47,15 @@ This demo is created for the 42Berlin and Devoxx France workshops.
    ```bash
    docker run -p 8080:8080 cookbook
    ```
+
+### RAG part
+
+For the RAG part, you need to run a Redis Stack instance, for instance with:
+```bash
+docker run -p 6379:6379 -d --name redis-stack redis/redis-stack
+```
+
+Then you can load a bunch of recipes into the Redis Vector Store with the script `upload-cookbook.sh`.
 
 ## License
 

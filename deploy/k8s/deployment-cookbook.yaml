@@ -15,12 +15,16 @@ spec:
         app: cookbook
     spec:
       containers:
-      - image: tmp:cookbook
+      - image: jpetazzo/cookbook
         name: cookbook
         ports:
         - containerPort: 8080
           name: http
         env:
+        - name: SPRING_DATA_REDIS_HOST
+          value: redis
+        - name: SPRING_AI_VECTORSTORE_REDIS_INITIALIZE_SCHEMA
+          value: "true"
         - name: SPRING_AI_OLLAMA_BASE_URL
           value: http://ollama:11434/
         - name: SPRING_AI_OLLAMA_CHAT_OPTIONS_MODEL

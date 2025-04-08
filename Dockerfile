@@ -3,11 +3,13 @@ ARG BUILDPLATFORM TARGETPLATFORM
 FROM --platform=$BUILDPLATFORM maven:3 AS jdk
 WORKDIR /src
 COPY . .
+ENV SPRING_AI_VECTORSTORE_REDIS_INITIALIZE_SCHEMA=false
 RUN --mount=type=cache,target=/root/.m2 mvn verify
 
 FROM ghcr.io/graalvm/native-image-community:21 AS native-builder
 WORKDIR /src
 COPY . .
+ENV SPRING_AI_VECTORSTORE_REDIS_INITIALIZE_SCHEMA=false
 RUN --mount=type=cache,target=/root/.m2 ./mvnw -Pnative native:compile
 
 FROM ubuntu AS native-runner
