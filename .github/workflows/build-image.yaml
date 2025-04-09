@@ -1,0 +1,79 @@
+# You can set the following optional environment variables:
+# DOCKER_HUB_TOKEN (to push to the Docker Hub)
+# DOCKER_HUB_USERNAME (if it should be different from the github user or organization name)
+
+name: Build and push image
+
+on:
+  push:
+
+jobs:
+  build-and-push-image:
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      -
+        name: Set environment variables
+        run: |
+          IMAGES=""
+          if [ "${{ secrets.DOCKER_HUB_TOKEN }}" ]; then
+            echo PUSH_TO_DOCKER_HUB=yes >> $GITHUB_ENV
+            IMAGES="$IMAGES docker.io/${{ github.repository }}"
+            if [ "${{ env.DOCKER_HUB_USERNAME }}" ]; then
+              echo DOCKER_HUB_USERNAME="${{ env.DOCKER_HUB_USERNAME }}" >> $GITHUB_ENV
+            else
+              echo DOCKER_HUB_USERNAME="${{ github.repository_owner }}" >> $GITHUB_ENV
+            fi
+          fi
+          if true; then
+            echo PUSH_TO_GHCR=yes >> $GITHUB_ENV
+            IMAGES="$IMAGES ghcr.io/${{ github.repository }}"
+          fi
+          echo 'IMAGES<<EOF' >> $GITHUB_ENV
+          for IMAGE in $IMAGES; do
+            echo $IMAGE >> $GITHUB_ENV
+            if [ "$GITHUB_REF_TYPE" == "tag" ]; then
+              echo $IMAGE:$GITHUB_REF_NAME >> $GITHUB_ENV
+            fi
+          done
+          echo 'EOF' >> $GITHUB_ENV
+
+      - 
+        uses: actions/checkout@v4
+
+      -
+        uses: docker/login-action@v3
+        name: docker/login-action@v3 (Docker Hub)
+        if: env.PUSH_TO_DOCKER_HUB
+        with:
+          username: ${{ env.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      -
+        uses: docker/login-action@v3
+        name: docker/login-action@v3 (GitHub Container Registry)
+        if: env.PUSH_TO_GHCR
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      -
+        uses: docker/setup-qemu-action@v3
+
+      -
+        uses: docker/setup-buildx-action@v3
+
+      -
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ env.IMAGES }}
+
