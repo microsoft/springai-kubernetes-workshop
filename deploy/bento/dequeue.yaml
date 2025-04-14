@@ -1,0 +1,19 @@
+input:
+  redis_list:
+    url: redis://localhost:6379
+    key: queue
+pipeline:
+  threads: 4
+  processors:
+    - mapping: |
+        root = "instructions=" + this.instructions
+    - http:
+        url: http://localhost:8080/recipe
+        headers:
+          Content-Type: application/x-www-form-urlencoded
+        timeout: 300s
+        retry_period: 10s
+output:
+  redis_list:
+    url: redis://localhost:6379
+    key: recipes

@@ -1,0 +1,17 @@
+---
+repositories:
+
+- name: bento
+  url: https://warpstreamlabs.github.io/bento-helm-chart
+
+---
+releases:
+
+- name: bento
+  chart: bento/bento
+  version: 0.1.0
+  values:
+  - ./values.yaml
+  #set:
+  #- name: config.pipeline.threads
+  #  value: 10

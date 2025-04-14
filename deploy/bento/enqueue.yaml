@@ -1,0 +1,13 @@
+input:
+  csv:
+    paths: [ 500-recipes.txt ]
+    parse_header_row: false
+    delimiter: "|"
+pipeline:
+  processors:
+    - mapping: |
+        root.instructions = this.0
+output:
+  redis_list:
+    url: redis://localhost:6379
+    key: queue
