@@ -2,7 +2,7 @@
 
 Cookbook is a Java-based application designed to manage and organize recipes. It provides a simple interface for storing, retrieving, and sharing recipes.
 
-This demo is created for the 42Berlin and Devoxx France workshops.
+This demo is created for the 42Berlin, Devoxx France and Belgium workshops.
 
 ## Features
 
@@ -13,7 +13,7 @@ This demo is created for the 42Berlin and Devoxx France workshops.
 
 ## Requirements
 
-- Java 21 Runtime Environment
+- Java 25 Runtime Environment
 - Maven 3 for building the project
 - Docker (optional, for containerized deployment)
 - Ollama (make sure to pull the models that you want to use, as the app won't pull them automatically)

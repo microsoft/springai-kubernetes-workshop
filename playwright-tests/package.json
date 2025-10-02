@@ -1,0 +1,13 @@
+{
+  "name": "cookbook-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for Recipe Generator",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0"
+  }
+}
